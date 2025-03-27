@@ -1,0 +1,39 @@
+<!-- wolf-admin-engine/templates/admin.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Create New Game</h1>
+    <form method="POST" action="/create_party">
+        <label>Rows: <input type="number" name="nb_rows" min="5" required></label>
+        <label>Columns: <input type="number" name="nb_cols" min="5" required></label><br>
+        <label>Max Turn Time (sec): <input type="number" name="max_turn_time" min="30" required></label>
+        <label>Total Turns: <input type="number" name="total_turns" min="1" required></label><br>
+        <label>Obstacles: <input type="number" name="nb_obstacles" min="0" required></label>
+        <label>Max Players: <input type="number" name="max_players" min="2" required></label><br>
+        <button type="submit">Create Game</button>
+    </form>
+
+    <h2>Active Games</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Size</th>
+            <th>Turns</th>
+            <th>Players</th>
+            <th>Created</th>
+        </tr>
+        {% for party in parties %}
+        <tr>
+            <td>{{ party.id }}</td>
+            <td>{{ party.nb_rows }}x{{ party.nb_cols }}</td>
+            <td>{{ party.total_turns }}</td>
+            <td>{{ party.max_players }}</td>
+            <td>{{ party.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
