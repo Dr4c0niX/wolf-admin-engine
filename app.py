@@ -10,14 +10,14 @@ db = SQLAlchemy(app)
 class Party(db.Model):
     __tablename__ = 'parties'
     
-    id = db.Column(db.Integer, primary_key=True)
-    nb_rows = db.Column(db.Integer, nullable=False)
-    nb_cols = db.Column(db.Integer, nullable=False)
-    max_turn_time = db.Column(db.Integer, nullable=False)
-    total_turns = db.Column(db.Integer, nullable=False)
-    nb_obstacles = db.Column(db.Integer, nullable=False)
-    max_players = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    id_party = db.Column(db.Integer, primary_key=True, name='id_party')
+    nb_rows = db.Column(db.Integer, name='nb_rows', nullable=False)
+    nb_cols = db.Column(db.Integer, name='nb_cols', nullable=False)
+    max_turn_time = db.Column(db.Integer, name='max_turn_time', nullable=False)
+    total_turns = db.Column(db.Integer, name='total_turns', nullable=False)
+    nb_obstacles = db.Column(db.Integer, name='nb_obstacles', nullable=False)
+    max_players = db.Column(db.Integer, name='max_players', nullable=False)
+    created_at = db.Column(db.DateTime, name='created_at', server_default=db.func.now())
 
 @app.route('/admin')
 def admin_dashboard():
