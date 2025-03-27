@@ -9,11 +9,10 @@
 <body>
     <h1>Create New Game</h1>
     <form method="POST" action="/create_party">
-        <label>Rows: <input type="number" name="nb_rows" min="5" required></label>
-        <label>Columns: <input type="number" name="nb_cols" min="5" required></label><br>
-        <label>Max Turn Time (sec): <input type="number" name="max_turn_time" min="30" required></label>
-        <label>Total Turns: <input type="number" name="total_turns" min="1" required></label><br>
-        <label>Obstacles: <input type="number" name="nb_obstacles" min="0" required></label>
+        <label>Game Title: <input type="text" name="title_party" required></label><br>
+        <label>Grid Size: <input type="number" name="grid_size" min="5" required></label><br>
+        <label>Turn Duration (sec): <input type="number" name="turn_duration" min="30" required></label>
+        <label>Max Turns: <input type="number" name="max_turns" min="1" required></label><br>
         <label>Max Players: <input type="number" name="max_players" min="2" required></label><br>
         <button type="submit">Create Game</button>
     </form>
@@ -22,18 +21,24 @@
     <table>
         <tr>
             <th>ID</th>
-            <th>Size</th>
-            <th>Turns</th>
+            <th>Title</th>
+            <th>Grid Size</th>
+            <th>Turn Duration</th>
+            <th>Max Turns</th>
             <th>Players</th>
             <th>Created</th>
+            <th>Status</th>
         </tr>
         {% for party in parties %}
         <tr>
-            <td>{{ party.id }}</td>
-            <td>{{ party.nb_rows }}x{{ party.nb_cols }}</td>
-            <td>{{ party.total_turns }}</td>
+            <td>{{ party.id_party }}</td>
+            <td>{{ party.title_party }}</td>
+            <td>{{ party.grid_size }}x{{ party.grid_size }}</td>
+            <td>{{ party.turn_duration }}s</td>
+            <td>{{ party.max_turns }}</td>
             <td>{{ party.max_players }}</td>
             <td>{{ party.created_at }}</td>
+            <td>{% if party.is_started %}Started{% elif party.is_finished %}Finished{% else %}Waiting{% endif %}</td>
         </tr>
         {% endfor %}
     </table>

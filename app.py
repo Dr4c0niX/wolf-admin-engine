@@ -11,13 +11,14 @@ class Party(db.Model):
     __tablename__ = 'parties'
     
     id_party = db.Column(db.Integer, primary_key=True, name='id_party')
-    nb_rows = db.Column(db.Integer, name='nb_rows', nullable=False)
-    nb_cols = db.Column(db.Integer, name='nb_cols', nullable=False)
-    max_turn_time = db.Column(db.Integer, name='max_turn_time', nullable=False)
-    total_turns = db.Column(db.Integer, name='total_turns', nullable=False)
-    nb_obstacles = db.Column(db.Integer, name='nb_obstacles', nullable=False)
-    max_players = db.Column(db.Integer, name='max_players', nullable=False)
+    title_party = db.Column(db.String(100), name='title_party', nullable=False) 
+    grid_size = db.Column(db.Integer, name='grid_size', nullable=False, default=10) 
+    max_players = db.Column(db.Integer, name='max_players', nullable=False, default=8)  
+    max_turns = db.Column(db.Integer, name='max_turns', nullable=False, default=30)  
+    turn_duration = db.Column(db.Integer, name='turn_duration', nullable=False, default=60) 
     created_at = db.Column(db.DateTime, name='created_at', server_default=db.func.now())
+    is_started = db.Column(db.Boolean, name='is_started', default=False)
+    is_finished = db.Column(db.Boolean, name='is_finished', default=False)
 
 @app.route('/admin')
 def admin_dashboard():
@@ -27,11 +28,10 @@ def admin_dashboard():
 @app.route('/create_party', methods=['POST'])
 def create_party():
     new_party = Party(
-        nb_rows=int(request.form['nb_rows']),
-        nb_cols=int(request.form['nb_cols']),
-        max_turn_time=int(request.form['max_turn_time']),
-        total_turns=int(request.form['total_turns']),
-        nb_obstacles=int(request.form['nb_obstacles']),
+        title_party=request.form['title_party'],
+        grid_size=int(request.form['grid_size']),
+        turn_duration=int(request.form['turn_duration']),
+        max_turns=int(request.form['max_turns']),
         max_players=int(request.form['max_players'])
     )
     
