@@ -1,11 +1,18 @@
 # wolf-admin-engine/app.py
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+import socket
+import json
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://wolf_admin:motdepasse_secure@db/wolf_game'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+# Configuration de la connexion TCP
+HTTP_SERVER_HOST = os.environ.get('HTTP_SERVER_HOST', 'http_server')  # Nom du service dans docker-compose
+HTTP_SERVER_PORT = int(os.environ.get('HTTP_SERVER_PORT', 9000))  # Port TCP dédié pour les notifications
 
 class Party(db.Model):
     __tablename__ = 'parties'
@@ -19,6 +26,35 @@ class Party(db.Model):
     created_at = db.Column(db.DateTime, name='created_at', server_default=db.func.now())
     is_started = db.Column(db.Boolean, name='is_started', default=False)
     is_finished = db.Column(db.Boolean, name='is_finished', default=False)
+
+def notify_http_server(party_data):
+    """
+    Notifie le serveur HTTP d'une nouvelle partie via TCP
+    """
+    try:
+        # Création d'une socket TCP
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            # Connexion au serveur
+            sock.connect((HTTP_SERVER_HOST, HTTP_SERVER_PORT))
+            
+            # Préparation du message
+            message = {
+                "action": "new_party",
+                "data": party_data
+            }
+            
+            # Envoi du message
+            sock.sendall(json.dumps(message).encode('utf-8'))
+            
+            # Attente de la réponse (optionnel)
+            response = sock.recv(1024)
+            print(f"Réponse du serveur HTTP: {response.decode('utf-8')}")
+            
+        print(f"Notification envoyée au serveur HTTP: {party_data}")
+        return True
+    except Exception as e:
+        print(f"Erreur lors de la notification au serveur HTTP: {e}")
+        return False
 
 @app.route('/admin')
 def admin_dashboard():
@@ -38,7 +74,16 @@ def create_party():
     db.session.add(new_party)
     db.session.commit()
     
-    # TODO: Notifier le moteur de jeu via gRPC/TCP
+    # Notifier le serveur HTTP via TCP
+    party_data = {
+        "id_party": new_party.id_party,
+        "title_party": new_party.title_party,
+        "grid_size": new_party.grid_size,
+        "max_players": new_party.max_players,
+        "max_turns": new_party.max_turns,
+        "turn_duration": new_party.turn_duration
+    }
+    notify_http_server(party_data)
     
     return redirect('/admin')
 
