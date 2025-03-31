@@ -19,7 +19,9 @@ class Party(db.Model):
     
     id_party = db.Column(db.Integer, primary_key=True, name='id_party')
     title_party = db.Column(db.String(100), name='title_party', nullable=False) 
-    grid_size = db.Column(db.Integer, name='grid_size', nullable=False, default=10) 
+    grid_rows = db.Column(db.Integer, name='grid_rows', nullable=False, default=10)  # Modifié
+    grid_cols = db.Column(db.Integer, name='grid_cols', nullable=False, default=10)  # Modifié
+    obstacles_count = db.Column(db.Integer, name='obstacles_count', nullable=False, default=0)  # Ajouté
     max_players = db.Column(db.Integer, name='max_players', nullable=False, default=8)  
     max_turns = db.Column(db.Integer, name='max_turns', nullable=False, default=30)  
     turn_duration = db.Column(db.Integer, name='turn_duration', nullable=False, default=60) 
@@ -65,7 +67,9 @@ def admin_dashboard():
 def create_party():
     new_party = Party(
         title_party=request.form['title_party'],
-        grid_size=int(request.form['grid_size']),
+        grid_rows=int(request.form['grid_rows']),  # Modifié
+        grid_cols=int(request.form['grid_cols']),  # Modifié
+        obstacles_count=int(request.form['obstacles_count']),  # Ajouté
         turn_duration=int(request.form['turn_duration']),
         max_turns=int(request.form['max_turns']),
         max_players=int(request.form['max_players'])
@@ -78,7 +82,9 @@ def create_party():
     party_data = {
         "id_party": new_party.id_party,
         "title_party": new_party.title_party,
-        "grid_size": new_party.grid_size,
+        "grid_rows": new_party.grid_rows,  # Modifié
+        "grid_cols": new_party.grid_cols,  # Modifié
+        "obstacles_count": new_party.obstacles_count,  # Ajouté
         "max_players": new_party.max_players,
         "max_turns": new_party.max_turns,
         "turn_duration": new_party.turn_duration

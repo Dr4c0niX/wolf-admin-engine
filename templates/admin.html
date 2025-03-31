@@ -10,7 +10,9 @@
     <h1>Create New Game</h1>
     <form method="POST" action="/create_party">
         <label>Game Title: <input type="text" name="title_party" required></label><br>
-        <label>Grid Size: <input type="number" name="grid_size" min="5" required></label><br>
+        <label>Grid Rows: <input type="number" name="grid_rows" min="5" required></label>
+        <label>Grid Columns: <input type="number" name="grid_cols" min="5" required></label><br>
+        <label>Obstacles: <input type="number" name="obstacles_count" min="0" required></label><br>
         <label>Turn Duration (sec): <input type="number" name="turn_duration" min="30" required></label>
         <label>Max Turns: <input type="number" name="max_turns" min="1" required></label><br>
         <label>Max Players: <input type="number" name="max_players" min="2" required></label><br>
@@ -23,6 +25,7 @@
             <th>ID</th>
             <th>Title</th>
             <th>Grid Size</th>
+            <th>Obstacles</th>
             <th>Turn Duration</th>
             <th>Max Turns</th>
             <th>Players</th>
@@ -33,7 +36,8 @@
         <tr>
             <td>{{ party.id_party }}</td>
             <td>{{ party.title_party }}</td>
-            <td>{{ party.grid_size }}x{{ party.grid_size }}</td>
+            <td>{{ party.grid_rows }}x{{ party.grid_cols }}</td>
+            <td>{{ party.obstacles_count }}</td>
             <td>{{ party.turn_duration }}s</td>
             <td>{{ party.max_turns }}</td>
             <td>{{ party.max_players }}</td>
